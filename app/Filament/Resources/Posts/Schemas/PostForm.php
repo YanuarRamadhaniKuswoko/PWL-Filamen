@@ -29,9 +29,21 @@ class PostForm
                     ->icon('heroicon-o-document-text')
                     ->schema([
                         Group::make([
-                        TextInput::make('title'),
-                        TextInput::make('slug'),
-                        Select::make('category_id'),
+                        TextInput::make('title')
+                            ->rules('required | min:3 | max:10')
+                            ->maxLength(255),
+                        TextInput::make('slug')
+                            ->rules('required ')
+                            ->unique()
+                            ->validationMessages([
+                                'unique' => 'Slug harus unik dan tidak boleh sama.'
+                                ]),
+                        Select::make('category_id')
+                        ->label('Category')
+                        ->relationship('category', 'name')
+                        ->required()
+                        ->preload()
+                        ->searchable(),
                         ColorPicker::make('color'),
                         ])->columns(2),
                         MarkdownEditor::make('content'),
@@ -40,6 +52,7 @@ class PostForm
                 Group::make([
                     Section::make('Image Upload')->schema([
                         FileUpload::make('image')
+                            ->required()
                             ->disk('public')
                             ->directory('posts'),
                     ]),
