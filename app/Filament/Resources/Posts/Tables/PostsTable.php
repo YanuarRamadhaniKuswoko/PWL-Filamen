@@ -9,6 +9,9 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\SelectFilter;
 
 
 
@@ -20,11 +23,14 @@ class PostsTable
             ->columns([
                 //
                 TextColumn::make('title')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('slug')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('category.name')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 ColorColumn::make('color'),
                 ImageColumn::make('image')->disk('public'),
                 TextColumn::make('created_at')
@@ -33,7 +39,23 @@ class PostsTable
                     ->dateTime(),
             ])->defaultSort('created_at' , 'desc')
             ->filters([
-                //
+                Filter::make('created_at')
+                    ->label('Creation Date')
+                        ->schema([
+                            DatePicker::make('created_at')
+                                ->label('Select Date'),
+                        ])
+                        ->query(function ($query, $data) {
+                            return $query
+                                ->when(
+                                    $data['created_at'],
+                                    fn ($query, $date) => $query->whereDate('created_at', $date)
+                                );
+                        }),
+                SelectFilter::make('category_id')
+                    ->label('Select Category')
+                    ->relationship('category', 'name')
+                    ->preload(),
             ])
             ->recordActions([
                 EditAction::make()

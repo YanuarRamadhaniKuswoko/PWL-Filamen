@@ -54,7 +54,7 @@ class PostForm
                         FileUpload::make('image')
                             ->required()
                             ->disk('public')
-                            ->directory('posts'),
+                            ->directory('post'),
                     ]),
 
                     Section::make('Meta Information')->schema([
