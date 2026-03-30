@@ -61,13 +61,15 @@ class PostForm
 
                     Section::make('Meta Information')->schema([
                         // RichEditor::make('content'),
-                        TagsInput::make('tags'),
+                        Select::make('tags')
+                            ->relationship('tags','name')
+                            ->multiple()
+                            ->preload(),
                         Checkbox::make('published'),
+                        DateTimePicker::make('published_at'),
                     ])->columns(1),
-
-                    DateTimePicker::make('published_at'),
                 ]),
-
+                
             ])->columns(3);
     }
 }
