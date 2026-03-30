@@ -45,7 +45,7 @@ class PostsTable
                 ColorColumn::make('color'),
                 ImageColumn::make('image')->disk('public'),
                 TextColumn::make('created_at')
-                    ->Label('Created At')
+                    ->label('Created At')
                     ->sortable()
                     ->dateTime(),
                 TextColumn::make('tags')
